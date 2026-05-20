@@ -59,7 +59,7 @@ export default function HomePage() {
       {/* ──────────────────────────────────────────────────────── */}
       {/* SECTION 1 — HERO */}
       {/* ──────────────────────────────────────────────────────── */}
-      <section className="min-h-screen w-full grid grid-cols-2 relative items-stretch pt-20" data-section="hero">
+      <section className="min-h-screen w-full grid grid-cols-1 lg:grid-cols-2 relative items-stretch pt-20" data-section="hero">
 
         {/* Left Column: Copy */}
         <div className="flex flex-col justify-center px-6 md:px-16 lg:px-24 py-12 relative z-15 bg-cream">
