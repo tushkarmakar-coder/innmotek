@@ -18,11 +18,13 @@ const NAV_LINKS = [
 ];
 
 const PRODUCT_CATEGORIES = [
-  { href: "/products/heat-pumps", label: "Air Source Heat Pumps" },
-  { href: "/products/pool-pumps", label: "Swimming Pool Heat Pumps" },
-  { href: "/products/fireplaces", label: "Wood Fired Fireplaces (Helix)" },
+  { href: "/products/heat-pumps", label: "Hot Water Heat Pumps" },
+  { href: "/products/pool-pumps", label: "Pool & Spa Systems" },
+  { href: "/products/fireplaces", label: "Wood Fireplaces & Heaters" },
+  { href: "/products", label: "Solar Water Heaters" },
+  { href: "/products", label: "Hot Water Storage Tanks" },
   { href: "/products/bbq-grills", label: "BBQ Grills & Outdoor" },
-  { href: "/products/accessories", label: "Pool Covers & Accessories" },
+  { href: "/products", label: "Radiator & Fancoil" },
 ];
 
 export default function Navbar() {
@@ -106,25 +108,148 @@ export default function Navbar() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 15 }}
                     transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                    className="absolute top-full left-1/2 -translate-x-1/2 w-64 bg-white/95 backdrop-blur-md border border-gold-light/20 shadow-luxury rounded-lg py-4 px-2 mt-1"
+                    className="absolute top-full right-[-320px] w-[820px] bg-white border border-gold-light/25 shadow-luxury rounded-2xl p-8 mt-2 grid grid-cols-4 gap-8 z-50 text-left pointer-events-auto"
                   >
-                    <div className="flex flex-col gap-1">
-                      <Link
-                        href="/products"
-                        className="text-xs uppercase tracking-wider font-semibold text-gold px-4 py-2 hover:bg-cream/40 rounded transition-colors"
-                      >
-                        All Products Listing
-                      </Link>
-                      <div className="h-[1px] bg-gold-light/20 my-1 mx-4" />
-                      {PRODUCT_CATEGORIES.map((category) => (
-                        <Link
-                          key={category.href}
-                          href={category.href}
-                          className="text-sm text-charcoal/80 hover:text-charcoal hover:bg-cream/40 px-4 py-2 rounded transition-all"
-                        >
-                          {category.label}
+                    {/* Col 1 */}
+                    <div className="flex flex-col gap-6">
+                      <div>
+                        <h4 className="font-semibold text-charcoal text-xs uppercase tracking-[2px] mb-3 text-gold">Hot Water Heat Pump</h4>
+                        <ul className="flex flex-col gap-2 text-xs">
+                          <li>
+                            <Link href="/products/heat-pumps" className="text-warm-gray hover:text-gold transition-colors flex items-center gap-1">
+                              &gt; Residential Heat Pump
+                            </Link>
+                          </li>
+                          <li>
+                            <Link href="/products/heat-pumps" className="text-warm-gray hover:text-gold transition-colors flex items-center gap-1">
+                              &gt; Commercial Heat Pump
+                            </Link>
+                          </li>
+                          <li>
+                            <Link href="/products/heat-pumps" className="text-warm-gray hover:text-gold transition-colors flex items-center gap-1">
+                              &gt; Industrial Heat Pump
+                            </Link>
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h4 className="font-semibold text-charcoal text-xs uppercase tracking-[2px] mb-3 text-gold">Hot Water Storage Tanks</h4>
+                        <ul className="flex flex-col gap-2 text-xs">
+                          <li>
+                            <Link href="/products" className="text-warm-gray hover:text-gold transition-colors flex items-center gap-1">
+                              &gt; Modular Panel Tank
+                            </Link>
+                          </li>
+                          <li>
+                            <Link href="/products" className="text-warm-gray hover:text-gold transition-colors flex items-center gap-1">
+                              &gt; Hot Water Storage Tank
+                            </Link>
+                          </li>
+                          <li>
+                            <Link href="/products" className="text-warm-gray hover:text-gold transition-colors flex items-center gap-1">
+                              &gt; Glass Lined Tanks
+                            </Link>
+                          </li>
+                          <li>
+                            <Link href="/products/accessories" className="text-warm-gray hover:text-gold transition-colors flex items-center gap-1">
+                              &gt; Tank Accessories
+                            </Link>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    {/* Col 2 */}
+                    <div className="flex flex-col gap-6">
+                      <div>
+                        <h4 className="font-semibold text-charcoal text-xs uppercase tracking-[2px] mb-3 text-gold">Solar Water Heaters</h4>
+                        <ul className="flex flex-col gap-2 text-xs">
+                          <li>
+                            <Link href="/products" className="text-warm-gray hover:text-gold transition-colors flex items-center gap-1">
+                              &gt; Thermal Solar collector
+                            </Link>
+                          </li>
+                          <li>
+                            <Link href="/products" className="text-warm-gray hover:text-gold transition-colors flex items-center gap-1">
+                              &gt; Pressurized Thermosiphon
+                            </Link>
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h4 className="font-semibold text-charcoal text-xs uppercase tracking-[2px] mb-3 text-gold">Heaters</h4>
+                        <ul className="flex flex-col gap-2 text-xs">
+                          <li>
+                            <Link href="/products/fireplaces" className="text-warm-gray hover:text-gold transition-colors flex items-center gap-1">
+                              &gt; Electric Heater
+                            </Link>
+                          </li>
+                          <li>
+                            <Link href="/products/fireplaces" className="text-warm-gray hover:text-gold transition-colors flex items-center gap-1">
+                              &gt; Wood Fired Heater
+                            </Link>
+                          </li>
+                          <li>
+                            <Link href="/products/bbq-grills" className="text-warm-gray hover:text-gold transition-colors flex items-center gap-1">
+                              &gt; Fire Pits & Barbecue
+                            </Link>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    {/* Col 3 */}
+                    <div className="flex flex-col gap-6 col-span-2">
+                      <div>
+                        <h4 className="font-semibold text-charcoal text-xs uppercase tracking-[2px] mb-3 text-gold">Pool & Spa</h4>
+                        <div className="grid grid-cols-2 gap-4">
+                          <ul className="flex flex-col gap-2 text-xs">
+                            <li>
+                              <Link href="/products/pool-pumps" className="text-warm-gray hover:text-gold transition-colors flex items-center gap-1">
+                                &gt; Swimming Pool Heat Pump
+                              </Link>
+                            </li>
+                            <li>
+                              <Link href="/products/accessories" className="text-warm-gray hover:text-gold transition-colors flex items-center gap-1">
+                                &gt; Pool & SPA Cover
+                              </Link>
+                            </li>
+                            <li>
+                              <Link href="/products/accessories" className="text-warm-gray hover:text-gold transition-colors flex items-center gap-1">
+                                &gt; Robotic Pool Cleaner
+                              </Link>
+                            </li>
+                          </ul>
+                          <ul className="flex flex-col gap-2 text-xs">
+                            <li>
+                              <Link href="/products/accessories" className="text-warm-gray hover:text-gold transition-colors flex items-center gap-1">
+                                &gt; Dehumidifier
+                              </Link>
+                            </li>
+                            <li>
+                              <Link href="/products/pool-pumps" className="text-warm-gray hover:text-gold transition-colors flex items-center gap-1">
+                                &gt; Pool Pumps
+                              </Link>
+                            </li>
+                            <li>
+                              <Link href="/products/accessories" className="text-warm-gray hover:text-gold transition-colors flex items-center gap-1">
+                                &gt; Accessories
+                              </Link>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4 border-t border-gold-light/20 pt-6">
+                        <Link href="/products" className="font-semibold text-charcoal text-xs uppercase tracking-[2px] hover:text-gold transition-colors">
+                          Radiator & Fancoil
                         </Link>
-                      ))}
+                        <Link href="/products" className="font-semibold text-charcoal text-xs uppercase tracking-[2px] hover:text-gold transition-colors">
+                          Others
+                        </Link>
+                      </div>
                     </div>
                   </motion.div>
                 )}
