@@ -28,12 +28,7 @@ function CinematicHeatPump() {
   const textureNormal = useTexture("/images/heat_pump_closed.png");
   const textureExploded = useTexture("/images/cinematic_heat_pump_exploded.png");
 
-  // Touch detection state
-  const [isTouch, setIsTouch] = useState(false);
-
   useEffect(() => {
-    setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
-
     const handleMouseMove = (e: MouseEvent) => {
       mouse.current.x = (e.clientX / window.innerWidth) - 0.5;
       mouse.current.y = (e.clientY / window.innerHeight) - 0.5;
@@ -126,18 +121,21 @@ function CinematicHeatPump() {
     <group ref={groupRef} position={[0, -0.1, 0]} scale={1.15}>
       {/* Invisible hover detector box */}
       <mesh
-        onPointerOver={() => {
-          if (!isTouch) {
+        onPointerOver={(e) => {
+          const pType = e.nativeEvent?.pointerType || "mouse";
+          if (pType === "mouse") {
             hoveredRef.current = true;
           }
         }}
-        onPointerOut={() => {
-          if (!isTouch) {
+        onPointerOut={(e) => {
+          const pType = e.nativeEvent?.pointerType || "mouse";
+          if (pType === "mouse") {
             hoveredRef.current = false;
           }
         }}
         onPointerDown={(e) => {
-          if (isTouch) {
+          const pType = e.nativeEvent?.pointerType || "mouse";
+          if (pType === "touch") {
             e.stopPropagation();
             hoveredRef.current = !hoveredRef.current;
           }
