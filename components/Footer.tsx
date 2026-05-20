@@ -1,12 +1,25 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import Logo from "@/components/Logo";
-
+import { motion } from "framer-motion";
 
 export default function Footer() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "submitting" | "success">("idle");
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    setStatus("submitting");
+    setTimeout(() => {
+      setStatus("success");
+      setEmail("");
+    }, 1200);
+  };
+
   return (
     <footer className="bg-charcoal text-cream pt-20 pb-8 relative overflow-hidden border-t border-gold/10">
       {/* Background Subtle Grain */}
@@ -150,23 +163,46 @@ export default function Footer() {
             <p className="text-warm-gray text-sm leading-relaxed mb-4">
               Subscribe to receive updates on energy efficiency tips and new products.
             </p>
-            <form onSubmit={(e) => e.preventDefault()} className="flex items-center">
-              <div className="relative w-full">
-                <input
-                  type="email"
-                  placeholder="Your email address"
-                  className="w-full bg-white/5 border border-white/10 text-cream px-4 py-3 text-sm rounded-l focus:outline-none focus:border-gold transition-colors duration-300"
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                className="bg-gold hover:bg-gold-light text-charcoal px-5 py-3 rounded-r transition-colors duration-300 flex items-center justify-center"
-                aria-label="Subscribe"
+            {status === "success" ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-gold/10 border border-gold/30 rounded p-4 text-center"
               >
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </form>
+                <p className="text-gold text-xs uppercase tracking-wider font-semibold">
+                  ✓ Subscribed successfully!
+                </p>
+                <p className="text-warm-gray text-[11px] mt-1">
+                  Thank you for joining our newsletter.
+                </p>
+              </motion.div>
+            ) : (
+              <form onSubmit={handleSubscribe} className="flex items-center">
+                <div className="relative w-full">
+                  <input
+                    type="email"
+                    placeholder="Your email address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full bg-white/5 border border-white/10 text-cream px-4 py-3 text-sm rounded-l focus:outline-none focus:border-gold transition-colors duration-300"
+                    required
+                    disabled={status === "submitting"}
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="bg-gold hover:bg-gold-light text-charcoal px-5 py-3 rounded-r transition-colors duration-300 flex items-center justify-center disabled:opacity-50"
+                  aria-label="Subscribe"
+                  disabled={status === "submitting"}
+                >
+                  {status === "submitting" ? (
+                    <div className="w-4 h-4 border-2 border-charcoal border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <ArrowRight className="w-4 h-4" />
+                  )}
+                </button>
+              </form>
+            )}
           </div>
         </div>
 
