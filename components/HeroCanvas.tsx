@@ -15,6 +15,10 @@ function CinematicHeatPump() {
   const normalRef = useRef<THREE.Mesh>(null);
   const explodedRef = useRef<THREE.Mesh>(null);
 
+  // Refs for the shader materials to update uniforms
+  const normalShaderRef = useRef<THREE.ShaderMaterial>(null);
+  const explodedShaderRef = useRef<THREE.ShaderMaterial>(null);
+
   // Mouse coordinate refs for interactive parallax tilt
   const mouse = useRef({ x: 0, y: 0 });
   const hoveredRef = useRef(false);
@@ -59,19 +63,51 @@ function CinematicHeatPump() {
     if (normalRef.current) {
       // Slides forward slightly as it dissolves to create depth
       normalRef.current.position.z = explode * 0.12;
-      // Ensure pixel scale remains exactly 1.0 (no relative scale mismatch)
       normalRef.current.scale.set(1.0, 1.0, 1);
-      (normalRef.current.material as THREE.MeshBasicMaterial).opacity = 1.0 - explode;
+    }
+    if (normalShaderRef.current) {
+      normalShaderRef.current.uniforms.opacity.value = 1.0 - explode;
     }
 
     // 4. UPDATE BACKGROUND EXPLODED VIEW (SLIDE IN & FADE IN)
     if (explodedRef.current) {
       // Moves from slightly behind to the base position
       explodedRef.current.position.z = -0.06 + explode * 0.06;
-      // Keep scale exactly 1.0 so its pixel dimensions match the normal image 1:1
       explodedRef.current.scale.set(1.0, 1.0, 1);
-      (explodedRef.current.material as THREE.MeshBasicMaterial).opacity = explode;
     }
+    if (explodedShaderRef.current) {
+      explodedShaderRef.current.uniforms.opacity.value = explode;
+    }
+  });
+
+  // Custom shader definition to remove dark backgrounds and make them transparent
+  const chromaKeyShaderArgs = (tex: THREE.Texture, initialOpacity: number) => ({
+    uniforms: {
+      tDiffuse: { value: tex },
+      opacity: { value: initialOpacity }
+    },
+    vertexShader: `
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform sampler2D tDiffuse;
+      uniform float opacity;
+      varying vec2 vUv;
+      void main() {
+        vec4 texColor = texture2D(tDiffuse, vUv);
+        // Calculate brightness
+        float brightness = max(texColor.r, max(texColor.g, texColor.b));
+        // Smoothly fade out dark pixels to remove the black/smoke background
+        float alpha = smoothstep(0.04, 0.18, brightness);
+        gl_FragColor = vec4(texColor.rgb, alpha * opacity);
+      }
+    `,
+    transparent: true,
+    depthWrite: false
   });
 
   return (
@@ -92,13 +128,13 @@ function CinematicHeatPump() {
       {/* Background Exploded View */}
       <mesh ref={explodedRef} position={[0, 0, -0.06]}>
         <planeGeometry args={[1.6, 1.6]} />
-        <meshBasicMaterial map={textureExploded} transparent={true} opacity={0} depthWrite={false} />
+        <shaderMaterial ref={explodedShaderRef} args={[chromaKeyShaderArgs(textureExploded, 0.0)]} />
       </mesh>
 
       {/* Normal View Casing */}
       <mesh ref={normalRef} position={[0, 0, 0]}>
         <planeGeometry args={[1.6, 1.6]} />
-        <meshBasicMaterial map={textureNormal} transparent={true} opacity={1} depthWrite={false} />
+        <shaderMaterial ref={normalShaderRef} args={[chromaKeyShaderArgs(textureNormal, 1.0)]} />
       </mesh>
     </group>
   );
@@ -165,8 +201,8 @@ export default function HeroCanvas() {
         <pointLight position={[0, 0, -2.5]} intensity={2.5} color="#C9A96E" />
         <pointLight position={[0, -0.6, 0.4]} intensity={2.0} color="#f97316" distance={3.0} />
 
-        {/* Master Group shifted to the left to leave space for the card on the right */}
-        <group position={[-0.38, 0.05, 0]}>
+        {/* Master Group shifted to the right to position the model centered in the dark column */}
+        <group position={[0.12, 0.05, 0]}>
           <React.Suspense fallback={null}>
             {/* 1. CINEMATIC EXPLODING HEAT PUMP */}
             <CinematicHeatPump />
