@@ -29,7 +29,7 @@ export default function Logo({ className = "", layout = "horizontal", iconSize =
       >
         <path d="M 43.5 10.5 A 40 40 0 1 0 43.5 89.5" />
         <path d="M 56.5 10.5 A 40 40 0 1 1 56.5 89.5" />
-        <path d="M 43.5 0 L 43.5 95 L 56.5 95 L 56.5 0" strokeLinecap="butt" />
+        <path d="M 43.5 10.5 L 43.5 89.5 M 56.5 10.5 L 56.5 89.5" />
       </svg>
 
       {/* Logo Typography INNMOTEK */}
