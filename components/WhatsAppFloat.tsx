@@ -12,7 +12,7 @@ export default function WhatsAppFloat() {
       initial={{ opacity: 0, scale: 0.6, y: 50 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 260, damping: 20, delay: 1 }}
-      className="fixed bottom-6 right-6 z-[999] flex items-center gap-3"
+      className="fixed bottom-24 md:bottom-28 right-6 z-[999] flex items-center gap-3"
     >
       <a
         href={WHATSAPP_LINK}
