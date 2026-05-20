@@ -21,7 +21,7 @@ function CinematicHeatPump() {
   const explodeFactorRef = useRef(0);
 
   // Load High-Fidelity Pre-Rendered Images
-  const textureNormal = useTexture("/images/heat_pump.png");
+  const textureNormal = useTexture("/images/heat_pump_closed.png");
   const textureExploded = useTexture("/images/cinematic_heat_pump_exploded.png");
 
   useEffect(() => {
