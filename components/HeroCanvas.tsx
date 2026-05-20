@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useState, useMemo } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Float, Stars, AdaptiveDpr, AdaptiveEvents, useTexture } from "@react-three/drei";
 import * as THREE from "three";
@@ -11,11 +11,8 @@ import * as THREE from "three";
 function CinematicHeatPump() {
   const groupRef = useRef<THREE.Group>(null);
   
-  // Refs for the 4 quarters of the normal casing
-  const tlRef = useRef<THREE.Mesh>(null);
-  const trRef = useRef<THREE.Mesh>(null);
-  const blRef = useRef<THREE.Mesh>(null);
-  const brRef = useRef<THREE.Mesh>(null);
+  // Refs for the normal and exploded meshes
+  const normalRef = useRef<THREE.Mesh>(null);
   const explodedRef = useRef<THREE.Mesh>(null);
 
   // Mouse coordinate refs for interactive parallax tilt
@@ -26,37 +23,6 @@ function CinematicHeatPump() {
   // Load High-Fidelity Pre-Rendered Images
   const textureNormal = useTexture("/images/heat_pump.png");
   const textureExploded = useTexture("/images/cinematic_heat_pump_exploded.png");
-
-  // Create clean clones of the texture for the 4 quarters to split them
-  const quarters = useMemo(() => {
-    if (!textureNormal) return null;
-
-    // Top-Left Quarter
-    const tl = textureNormal.clone();
-    tl.repeat.set(0.5, 0.5);
-    tl.offset.set(0, 0.5);
-    tl.needsUpdate = true;
-
-    // Top-Right Quarter
-    const tr = textureNormal.clone();
-    tr.repeat.set(0.5, 0.5);
-    tr.offset.set(0.5, 0.5);
-    tr.needsUpdate = true;
-
-    // Bottom-Left Quarter
-    const bl = textureNormal.clone();
-    bl.repeat.set(0.5, 0.5);
-    bl.offset.set(0, 0);
-    bl.needsUpdate = true;
-
-    // Bottom-Right Quarter
-    const br = textureNormal.clone();
-    br.repeat.set(0.5, 0.5);
-    br.offset.set(0.5, 0);
-    br.needsUpdate = true;
-
-    return { tl, tr, bl, br };
-  }, [textureNormal]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -71,8 +37,8 @@ function CinematicHeatPump() {
     const time = state.clock.elapsedTime;
 
     // 1. ANIMATE EXPLOSION (LERPING)
-    // Gentle idle breathing cycle (between 0.0 and 0.06)
-    const breathe = 0.03 + Math.sin(time * 1.5) * 0.03;
+    // Gentle idle breathing cycle (between 0.0 and 0.04)
+    const breathe = 0.02 + Math.sin(time * 1.5) * 0.02;
     const targetExplode = hoveredRef.current ? 1.0 : breathe;
     explodeFactorRef.current = THREE.MathUtils.lerp(explodeFactorRef.current, targetExplode, 0.08);
     const explode = explodeFactorRef.current;
@@ -89,45 +55,24 @@ function CinematicHeatPump() {
       groupRef.current.position.y = -0.1 + Math.sin(time * 1.0) * 0.04;
     }
 
-    // 3. UPDATE QUARTER PANELS (SPLITTING OUTWARD & FADING)
-    const splitDist = 0.65 * explode;
-    const opacity = 1.0 - explode * 1.0;
-
-    if (tlRef.current) {
-      tlRef.current.position.x = -0.4 - splitDist;
-      tlRef.current.position.y = 0.4 + splitDist;
-      tlRef.current.position.z = explode * 0.15;
-      (tlRef.current.material as THREE.MeshBasicMaterial).opacity = opacity;
-    }
-    if (trRef.current) {
-      trRef.current.position.x = 0.4 + splitDist;
-      trRef.current.position.y = 0.4 + splitDist;
-      trRef.current.position.z = explode * 0.15;
-      (trRef.current.material as THREE.MeshBasicMaterial).opacity = opacity;
-    }
-    if (blRef.current) {
-      blRef.current.position.x = -0.4 - splitDist;
-      blRef.current.position.y = -0.4 - splitDist;
-      blRef.current.position.z = explode * 0.15;
-      (blRef.current.material as THREE.MeshBasicMaterial).opacity = opacity;
-    }
-    if (brRef.current) {
-      brRef.current.position.x = 0.4 + splitDist;
-      brRef.current.position.y = -0.4 - splitDist;
-      brRef.current.position.z = explode * 0.15;
-      (brRef.current.material as THREE.MeshBasicMaterial).opacity = opacity;
+    // 3. UPDATE SOLID NORMAL PLANE (SLIDE FORWARD & FADE OUT)
+    if (normalRef.current) {
+      // Slides forward slightly as it dissolves to create depth
+      normalRef.current.position.z = explode * 0.12;
+      // Ensure pixel scale remains exactly 1.0 (no relative scale mismatch)
+      normalRef.current.scale.set(1.0, 1.0, 1);
+      (normalRef.current.material as THREE.MeshBasicMaterial).opacity = 1.0 - explode;
     }
 
-    // 4. UPDATE BACKGROUND EXPLODED VIEW (ZOOM IN & FADE IN)
+    // 4. UPDATE BACKGROUND EXPLODED VIEW (SLIDE IN & FADE IN)
     if (explodedRef.current) {
-      explodedRef.current.position.z = -0.05 + explode * 0.05;
-      const scale = 1.45 + explode * 0.15; // grows from 1.45 to 1.6
-      explodedRef.current.scale.set(scale, scale, 1);
+      // Moves from slightly behind to the base position
+      explodedRef.current.position.z = -0.06 + explode * 0.06;
+      // Keep scale exactly 1.0 so its pixel dimensions match the normal image 1:1
+      explodedRef.current.scale.set(1.0, 1.0, 1);
       (explodedRef.current.material as THREE.MeshBasicMaterial).opacity = explode;
     }
   });
-
-  if (!quarters) return null;
 
   return (
     <group ref={groupRef} position={[0, -0.1, 0]} scale={1.15}>
@@ -145,33 +90,15 @@ function CinematicHeatPump() {
       </mesh>
 
       {/* Background Exploded View */}
-      <mesh ref={explodedRef} position={[0, 0, -0.05]}>
+      <mesh ref={explodedRef} position={[0, 0, -0.06]}>
         <planeGeometry args={[1.6, 1.6]} />
         <meshBasicMaterial map={textureExploded} transparent={true} opacity={0} depthWrite={false} />
       </mesh>
 
-      {/* Top-Left Quarter */}
-      <mesh ref={tlRef} position={[-0.4, 0.4, 0]}>
-        <planeGeometry args={[0.8, 0.8]} />
-        <meshBasicMaterial map={quarters.tl} transparent={true} opacity={1} depthWrite={false} />
-      </mesh>
-
-      {/* Top-Right Quarter */}
-      <mesh ref={trRef} position={[0.4, 0.4, 0]}>
-        <planeGeometry args={[0.8, 0.8]} />
-        <meshBasicMaterial map={quarters.tr} transparent={true} opacity={1} depthWrite={false} />
-      </mesh>
-
-      {/* Bottom-Left Quarter */}
-      <mesh ref={blRef} position={[-0.4, -0.4, 0]}>
-        <planeGeometry args={[0.8, 0.8]} />
-        <meshBasicMaterial map={quarters.bl} transparent={true} opacity={1} depthWrite={false} />
-      </mesh>
-
-      {/* Bottom-Right Quarter */}
-      <mesh ref={brRef} position={[0.4, -0.4, 0]}>
-        <planeGeometry args={[0.8, 0.8]} />
-        <meshBasicMaterial map={quarters.br} transparent={true} opacity={1} depthWrite={false} />
+      {/* Normal View Casing */}
+      <mesh ref={normalRef} position={[0, 0, 0]}>
+        <planeGeometry args={[1.6, 1.6]} />
+        <meshBasicMaterial map={textureNormal} transparent={true} opacity={1} depthWrite={false} />
       </mesh>
     </group>
   );
