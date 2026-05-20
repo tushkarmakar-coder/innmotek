@@ -110,11 +110,21 @@ function ExplodingFireplace() {
     <group ref={groupRef} position={[0, -0.05, 0]} scale={1.15}>
       {/* Invisible hover detector box */}
       <mesh
-        onPointerOver={() => {
-          hoveredRef.current = true;
+        onPointerOver={(e) => {
+          if (e.pointerType === "mouse") {
+            hoveredRef.current = true;
+          }
         }}
-        onPointerOut={() => {
-          hoveredRef.current = false;
+        onPointerOut={(e) => {
+          if (e.pointerType === "mouse") {
+            hoveredRef.current = false;
+          }
+        }}
+        onPointerDown={(e) => {
+          if (e.pointerType === "touch") {
+            e.stopPropagation();
+            hoveredRef.current = !hoveredRef.current;
+          }
         }}
       >
         <boxGeometry args={[2.0, 2.0, 2.0]} />
