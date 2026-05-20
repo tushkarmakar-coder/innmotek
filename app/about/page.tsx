@@ -4,6 +4,8 @@ import React from "react";
 import SectionEyebrow from "@/components/SectionEyebrow";
 import RevealWrapper from "@/components/RevealWrapper";
 import { Award, Shield, CheckCircle, Factory, Users, Zap } from "lucide-react";
+import Logo from "@/components/Logo";
+
 
 export default function AboutPage() {
   const stats = [
@@ -42,7 +44,7 @@ export default function AboutPage() {
           <RevealWrapper className="h-[450px] rounded-2xl overflow-hidden bg-gradient-to-br from-navy to-charcoal border border-gold-light/20 relative flex items-center justify-center p-8 shadow-luxury">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(201,169,110,0.15)_0%,transparent_70%)]" />
             <div className="relative text-center flex flex-col items-center gap-6 z-10">
-              <span className="text-6xl text-gold font-logo tracking-widest">INN[M]OTEK</span>
+              <Logo layout="vertical" iconSize={64} className="text-gold" />
               <div className="h-[1px] w-24 bg-gold-light/35" />
               <p className="text-white/60 font-body text-xs uppercase tracking-[4px]">Gorakhpur Uttar Pradesh</p>
             </div>

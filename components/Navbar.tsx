@@ -5,6 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
+import Logo from "@/components/Logo";
+
 
 const NAV_LINKS = [
   { href: "/about", label: "About" },
@@ -73,9 +75,9 @@ export default function Navbar() {
           {/* Logo */}
           <Link
             href="/"
-            className="text-2xl font-logo tracking-[3px] transition-colors duration-300 text-charcoal hover:opacity-90"
+            className="transition-colors duration-300 text-charcoal hover:opacity-90 flex items-center"
           >
-            INN<span className="text-gold">[M]</span>OTEK
+            <Logo layout="horizontal" iconSize={32} />
           </Link>
 
           {/* Desktop Navigation */}

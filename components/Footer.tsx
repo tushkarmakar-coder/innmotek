@@ -3,6 +3,8 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import Logo from "@/components/Logo";
+
 
 export default function Footer() {
   return (
@@ -15,8 +17,8 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           {/* Column 1: Brand Description */}
           <div className="flex flex-col gap-6">
-            <Link href="/" className="text-2xl font-logo tracking-[3px] text-white">
-              INN<span className="text-gold">[M]</span>OTEK
+            <Link href="/" className="transition-colors duration-300 text-white hover:opacity-90 flex items-center">
+              <Logo layout="horizontal" iconSize={32} />
             </Link>
             <p className="text-warm-gray text-sm leading-relaxed max-w-sm">
               Premium manufacturer of energy-efficient heat pumps, swimming pool heat pumps, wood-fired fireplaces, and custom BBQ grills. Based in Gorakhpur, UP, India.
