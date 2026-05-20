@@ -359,7 +359,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left: Image Card */}
-            <RevealWrapper className="relative h-[480px] rounded-3xl overflow-hidden border border-gold-light/20 shadow-luxury group">
+            <RevealWrapper className="relative h-[280px] sm:h-[380px] md:h-[480px] rounded-3xl overflow-hidden border border-gold-light/20 shadow-luxury group">
               <Image
                 src="/images/about_company.png"
                 alt="Innmotek Installation Service"

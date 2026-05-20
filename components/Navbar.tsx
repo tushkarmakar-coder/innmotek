@@ -31,7 +31,6 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isDarkSection, setIsDarkSection] = useState(false);
   const pathname = usePathname();
 
   // Scroll handler to toggle backdrop glassmorphism and text color
@@ -41,11 +40,8 @@ export default function Navbar() {
       
       if (scrollY > 100) {
         setIsScrolled(true);
-        setIsDarkSection(false); // When scrolled past hero, on light section
       } else {
         setIsScrolled(false);
-        // If we're at the top of page, we're on the dark hero section
-        setIsDarkSection(true);
       }
     };
     

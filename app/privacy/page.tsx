@@ -34,7 +34,7 @@ export default function PrivacyPage() {
           <section className="flex flex-col gap-3">
             <h2 className="text-xl font-serif-luxury text-charcoal font-semibold">1. Introduction</h2>
             <p>
-              Welcome to Innmotek Private Limited ("we," "our," "us"). We are committed to protecting your personal data and respecting your privacy. This Privacy Policy outlines how we collect, process, share, and protect your information when you visit our website <a href="https://innmotek.com" className="text-gold underline">innmotek.com</a>, purchase our products, or engage with our services.
+              Welcome to Innmotek Private Limited (&quot;we,&quot; &quot;our,&quot; &quot;us&quot;). We are committed to protecting your personal data and respecting your privacy. This Privacy Policy outlines how we collect, process, share, and protect your information when you visit our website <a href="https://innmotek.com" className="text-gold underline">innmotek.com</a>, purchase our products, or engage with our services.
             </p>
           </section>
 
