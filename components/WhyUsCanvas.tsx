@@ -2,82 +2,155 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
+import { AdaptiveDpr, AdaptiveEvents, useTexture, Stars } from "@react-three/drei";
 import * as THREE from "three";
-import { AdaptiveDpr, AdaptiveEvents } from "@react-three/drei";
 
-function CompressorTurbine() {
-  const turbineRef = useRef<THREE.Group>(null);
-  const shellRef = useRef<THREE.Mesh>(null);
-  const ringRef = useRef<THREE.Mesh>(null);
-  
+// ────────────────────────────────────────────────────────
+// INTERACTIVE EXPLODING FIREPLACE MODEL FOR WHY US SECTION
+// ────────────────────────────────────────────────────────
+function ExplodingFireplace() {
+  const groupRef = useRef<THREE.Group>(null);
+  const normalRef = useRef<THREE.Mesh>(null);
+  const explodedRef = useRef<THREE.Mesh>(null);
+  const normalShaderRef = useRef<THREE.ShaderMaterial>(null);
+  const explodedShaderRef = useRef<THREE.ShaderMaterial>(null);
+
+  const mouse = useRef({ x: 0, y: 0 });
+  const hoveredRef = useRef(false);
+  const explodeFactorRef = useRef(0);
+
+  // Load High-Fidelity Fireplace Textures
+  const textureNormal = useTexture("/images/fireplace_closed.png");
+  const textureExploded = useTexture("/images/fireplace_exploded.png");
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      mouse.current.x = (e.clientX / window.innerWidth) - 0.5;
+      mouse.current.y = (e.clientY / window.innerHeight) - 0.5;
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
   useFrame((state) => {
     const time = state.clock.elapsedTime;
-    
-    if (turbineRef.current) {
-      // Rotate compressor wheel
-      turbineRef.current.rotation.z = time * 0.22;
-      // Subtle float
-      turbineRef.current.position.y = Math.sin(time * 1.2) * 0.05;
-    }
-    
-    if (shellRef.current) {
-      shellRef.current.rotation.y = time * 0.08;
-      shellRef.current.rotation.x = time * 0.04;
+
+    // 1. ANIMATE EXPLOSION
+    const breathe = 0.02 + Math.sin(time * 1.5) * 0.02;
+    const targetExplode = hoveredRef.current ? 1.0 : breathe;
+    explodeFactorRef.current = THREE.MathUtils.lerp(explodeFactorRef.current, targetExplode, 0.08);
+    const explode = explodeFactorRef.current;
+
+    // 2. PARALLAX TILT + OSCILLATION
+    const baseRotationY = Math.sin(time * 0.3) * 0.15;
+    if (groupRef.current) {
+      const targetRotY = baseRotationY + mouse.current.x * 0.55;
+      const targetRotX = mouse.current.y * 0.35;
+      groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, targetRotY, 0.05);
+      groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, targetRotX, 0.05);
+      groupRef.current.position.y = Math.sin(time * 1.0) * 0.04;
     }
 
-    if (ringRef.current) {
-      ringRef.current.rotation.y = -time * 0.15;
-      ringRef.current.rotation.z = time * 0.07;
+    // 3. UPDATE SOLID NORMAL PLANE
+    if (normalRef.current) {
+      normalRef.current.position.z = explode * 0.12;
+      normalRef.current.scale.set(1.0, 1.0, 1);
+    }
+    if (normalShaderRef.current) {
+      normalShaderRef.current.uniforms.opacity.value = 1.0 - explode;
+    }
+
+    // 4. UPDATE EXPLODED PLANE
+    if (explodedRef.current) {
+      explodedRef.current.position.z = -0.06 + explode * 0.06;
+      explodedRef.current.scale.set(1.0, 1.0, 1);
+    }
+    if (explodedShaderRef.current) {
+      explodedShaderRef.current.uniforms.opacity.value = explode;
+    }
+  });
+
+  // Custom shader to discard dark backgrounds and soft feather borders
+  const chromaKeyShaderArgs = (tex: THREE.Texture, initialOpacity: number) => ({
+    uniforms: {
+      tDiffuse: { value: tex },
+      opacity: { value: initialOpacity }
+    },
+    vertexShader: `
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform sampler2D tDiffuse;
+      uniform float opacity;
+      varying vec2 vUv;
+      void main() {
+        vec4 texColor = texture2D(tDiffuse, vUv);
+        
+        // 1. CHROMA-KEY BRIGHTNESS FILTER
+        float brightness = max(texColor.r, max(texColor.g, texColor.b));
+        float brightnessAlpha = smoothstep(0.04, 0.18, brightness);
+        
+        // 2. RADIAL EDGE FEATHERING
+        vec2 centerDist = vUv - vec2(0.5);
+        float dist = length(centerDist);
+        float radialAlpha = 1.0 - smoothstep(0.38, 0.49, dist);
+        
+        gl_FragColor = vec4(texColor.rgb, brightnessAlpha * radialAlpha * opacity);
+      }
+    `,
+    transparent: true,
+    depthWrite: false
+  });
+
+  return (
+    <group ref={groupRef} position={[0, -0.05, 0]} scale={1.15}>
+      {/* Invisible hover detector box */}
+      <mesh
+        onPointerOver={() => {
+          hoveredRef.current = true;
+        }}
+        onPointerOut={() => {
+          hoveredRef.current = false;
+        }}
+      >
+        <boxGeometry args={[2.0, 2.0, 2.0]} />
+        <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+      </mesh>
+
+      {/* Exploded View */}
+      <mesh ref={explodedRef} position={[0, 0, -0.06]}>
+        <planeGeometry args={[1.6, 1.6]} />
+        <shaderMaterial ref={explodedShaderRef} args={[chromaKeyShaderArgs(textureExploded, 0.0)]} />
+      </mesh>
+
+      {/* Closed View */}
+      <mesh ref={normalRef} position={[0, 0, 0]}>
+        <planeGeometry args={[1.6, 1.6]} />
+        <shaderMaterial ref={normalShaderRef} args={[chromaKeyShaderArgs(textureNormal, 1.0)]} />
+      </mesh>
+    </group>
+  );
+}
+
+// Orbiting Rings
+function ThermodynamicOrbits() {
+  const wireframeRef = useRef<THREE.Mesh>(null);
+  useFrame((state) => {
+    if (wireframeRef.current) {
+      wireframeRef.current.rotation.y = state.clock.elapsedTime * 0.25;
+      wireframeRef.current.rotation.x = state.clock.elapsedTime * 0.08;
     }
   });
 
   return (
-    <group scale={1.1} rotation={[0.4, 0.5, 0]}>
-      {/* Outer Wireframe Energy Sphere */}
-      <mesh ref={shellRef}>
-        <sphereGeometry args={[1.5, 16, 16]} />
-        <meshBasicMaterial color="#E8D5B0" wireframe opacity={0.1} transparent />
-      </mesh>
-
-      {/* Orbiting Ring */}
-      <mesh ref={ringRef}>
-        <torusGeometry args={[1.3, 0.012, 12, 64]} />
-        <meshStandardMaterial color="#C9A96E" metalness={0.9} roughness={0.1} />
-      </mesh>
-
-      {/* Central Compressor Assembly */}
-      <group ref={turbineRef}>
-        {/* Hub Shaft */}
-        <mesh>
-          <cylinderGeometry args={[0.2, 0.2, 0.55, 24]} />
-          <meshStandardMaterial color="#C9A96E" metalness={0.9} roughness={0.1} />
-        </mesh>
-        
-        {/* Compressor Blades (12 fins) */}
-        {[...Array(12)].map((_, i) => {
-          const angle = (i * Math.PI * 2) / 12;
-          return (
-            <group key={i} rotation={[0, 0, angle]}>
-              <mesh position={[0, 0.44, 0]}>
-                <boxGeometry args={[0.07, 0.48, 0.12]} />
-                <meshStandardMaterial color="#334155" metalness={0.8} roughness={0.2} />
-              </mesh>
-              {/* Outer Golden Accents on Fins */}
-              <mesh position={[0, 0.7, 0]}>
-                <sphereGeometry args={[0.045, 8, 8]} />
-                <meshStandardMaterial color="#E8D5B0" metalness={0.95} roughness={0.1} />
-              </mesh>
-            </group>
-          );
-        })}
-
-        {/* Inner Hub Stabilizer Ring */}
-        <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[0.42, 0.025, 8, 48]} />
-          <meshStandardMaterial color="#E8D5B0" metalness={0.9} roughness={0.1} />
-        </mesh>
-      </group>
-    </group>
+    <mesh ref={wireframeRef}>
+      <torusGeometry args={[1.4, 0.005, 8, 120]} />
+      <meshBasicMaterial color="#eab308" transparent opacity={0.3} />
+    </mesh>
   );
 }
 
@@ -89,22 +162,35 @@ export default function WhyUsCanvas() {
   }, []);
 
   if (!isMounted) {
-    return <div className="absolute inset-0 bg-navy" />;
+    return <div className="absolute inset-0 bg-[#0a0f1d]" />;
   }
 
   return (
-    <div className="absolute inset-0 bg-navy overflow-hidden">
+    <div className="absolute inset-0 bg-[#0a0f1d] overflow-hidden">
       <Canvas
-        camera={{ position: [0, 0, 3.2], fov: 55 }}
+        camera={{ position: [0, 0, 2.8], fov: 48 }}
         gl={{ antialias: true, alpha: true }}
       >
         <color attach="background" args={["#0a0f1d"]} />
-        <ambientLight intensity={0.7} />
-        <pointLight position={[3, 3, 3]} intensity={1.5} color="#e8d5b0" />
-        <directionalLight position={[-3, 3, 2]} intensity={0.9} color="#ffffff" />
-        
-        <CompressorTurbine />
-        
+        <ambientLight intensity={1.5} />
+        <directionalLight position={[0, 0, 5]} intensity={2.5} />
+
+        <React.Suspense fallback={null}>
+          <ExplodingFireplace />
+        </React.Suspense>
+
+        <ThermodynamicOrbits />
+
+        <Stars
+          radius={60}
+          depth={25}
+          count={250}
+          factor={2.0}
+          saturation={0.3}
+          fade
+          speed={0.4}
+        />
+
         <AdaptiveDpr pixelated />
         <AdaptiveEvents />
       </Canvas>

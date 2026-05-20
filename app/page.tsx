@@ -106,16 +106,16 @@ export default function HomePage() {
 
         {/* Right Column: WebGL + Floating Card */}
         <div
-          className="relative w-full min-h-[450px] lg:min-h-screen flex items-center justify-center overflow-hidden bg-[#08070C]"
+          className="relative w-full lg:min-h-screen flex flex-col lg:block overflow-hidden bg-[#08070C] pb-8 lg:pb-0"
           onMouseMove={handleHeroMouseMove}
           onMouseLeave={handleHeroMouseLeave}
         >
           {/* Three.js Canvas */}
-          <div className="absolute inset-0 z-0 w-full h-full">
+          <div className="relative w-full h-[380px] lg:absolute lg:inset-0 lg:h-full lg:w-full z-0">
             <HeroCanvas />
           </div>
 
-          {/* 3D Floating Glassmorphism Card - Moved to bottom-left corner to not block the 3D model */}
+          {/* 3D Floating Glassmorphism Card */}
           <motion.div
             style={{
               transform: `perspective(1000px) rotateX(${heroCardTilt.rotateX}deg) rotateY(${heroCardTilt.rotateY}deg)`,
@@ -129,7 +129,7 @@ export default function HomePage() {
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className="absolute bottom-4 right-4 md:bottom-10 md:right-10 z-10 w-[calc(100%-2rem)] max-w-[320px] glass-card-light rounded-3xl p-6 md:p-8 flex flex-col gap-5 border border-gold-light/25 shadow-luxury"
+            className="relative lg:absolute lg:bottom-10 lg:right-10 z-10 w-[calc(100%-2rem)] lg:w-[320px] max-w-[320px] mx-auto lg:mx-0 glass-card-light rounded-3xl p-6 md:p-8 flex flex-col gap-5 border border-gold-light/25 shadow-luxury"
           >
             <div className="flex justify-between items-center">
               <span className="text-[10px] tracking-wider uppercase font-semibold text-gold bg-gold/10 px-3 py-1 rounded-full">
@@ -357,7 +357,7 @@ export default function HomePage() {
       {/* ──────────────────────────────────────────────────────── */}
       <section className="min-h-screen grid grid-cols-1 lg:grid-cols-2 items-stretch border-t border-gold-light/10">
         {/* Left Dark Navy Panel with Canvas */}
-        <div className="relative min-h-[450px] lg:min-h-0 flex items-center justify-center overflow-hidden">
+        <div className="relative min-h-[450px] lg:min-h-0 flex items-center justify-center overflow-hidden bg-[#0a0f1d]">
           {/* Wireframe Rotating rings Canvas */}
           <div className="absolute inset-0 z-0">
             <WhyUsCanvas />
@@ -369,29 +369,6 @@ export default function HomePage() {
           <span className="absolute inset-x-0 bottom-6 text-center text-[clamp(140px,20vw,240px)] font-logo text-white/5 select-none pointer-events-none leading-none z-1">
             4X
           </span>
-
-          {/* Stats Glassmorphism Grid Card */}
-          <RevealWrapper className="relative z-10 glass-card w-[340px] p-8 rounded-3xl border border-white/10 shadow-2xl flex flex-col gap-6">
-            <span className="text-xs font-body tracking-[3px] uppercase text-gold font-bold">Innmotek footprint</span>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="flex flex-col">
-                <span className="text-3xl font-logo tracking-wider text-white">500+</span>
-                <span className="text-[9px] uppercase tracking-wider text-white/50">Installations</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-3xl font-logo tracking-wider text-white">12+</span>
-                <span className="text-[9px] uppercase tracking-wider text-white/50">States Served</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-3xl font-logo tracking-wider text-white">75%</span>
-                <span className="text-[9px] uppercase tracking-wider text-[#25D366] font-semibold">Energy Saved</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-3xl font-logo tracking-wider text-white">4.9★</span>
-                <span className="text-[9px] uppercase tracking-wider text-white/50">User Rating</span>
-              </div>
-            </div>
-          </RevealWrapper>
         </div>
 
         {/* Right Cream Content Panel */}
@@ -401,6 +378,29 @@ export default function HomePage() {
             Precision manufacture, <br />
             uncompromised <span className="italic text-gold">yield.</span>
           </h2>
+
+          {/* Stats Grid Card */}
+          <RevealWrapper className="mb-8 w-full max-w-[480px] bg-white border border-gold-light/20 p-8 rounded-3xl shadow-luxury flex flex-col gap-6">
+            <span className="text-xs font-body tracking-[3px] uppercase text-gold font-bold">Innmotek footprint</span>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="flex flex-col">
+                <span className="text-3xl font-logo tracking-wider text-charcoal leading-none">500+</span>
+                <span className="text-[9px] uppercase tracking-wider text-warm-gray mt-1">Installations</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-3xl font-logo tracking-wider text-charcoal leading-none">12+</span>
+                <span className="text-[9px] uppercase tracking-wider text-warm-gray mt-1">States Served</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-3xl font-logo tracking-wider text-[#25D366] leading-none">75%</span>
+                <span className="text-[9px] uppercase tracking-wider text-warm-gray mt-1">Energy Saved</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-3xl font-logo tracking-wider text-charcoal leading-none">4.9★</span>
+                <span className="text-[9px] uppercase tracking-wider text-warm-gray mt-1">User Rating</span>
+              </div>
+            </div>
+          </RevealWrapper>
 
           <div className="flex flex-col gap-6">
             {/* Item 1 */}
