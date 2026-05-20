@@ -80,7 +80,7 @@ function CinematicHeatPump() {
     }
   });
 
-  // Custom shader definition to remove dark backgrounds and make them transparent
+  // Custom shader definition to remove dark backgrounds and make edges transparent
   const chromaKeyShaderArgs = (tex: THREE.Texture, initialOpacity: number) => ({
     uniforms: {
       tDiffuse: { value: tex },
@@ -99,11 +99,18 @@ function CinematicHeatPump() {
       varying vec2 vUv;
       void main() {
         vec4 texColor = texture2D(tDiffuse, vUv);
-        // Calculate brightness
+        
+        // 1. CHROMA-KEY BRIGHTNESS FILTER
         float brightness = max(texColor.r, max(texColor.g, texColor.b));
-        // Smoothly fade out dark pixels to remove the black/smoke background
-        float alpha = smoothstep(0.04, 0.18, brightness);
-        gl_FragColor = vec4(texColor.rgb, alpha * opacity);
+        float brightnessAlpha = smoothstep(0.04, 0.18, brightness);
+        
+        // 2. RADIAL EDGE FEATHERING (Removes the rectangular borders completely)
+        vec2 centerDist = vUv - vec2(0.5);
+        float dist = length(centerDist);
+        // Start fading at 0.38, reach full transparency at 0.49
+        float radialAlpha = 1.0 - smoothstep(0.38, 0.49, dist);
+        
+        gl_FragColor = vec4(texColor.rgb, brightnessAlpha * radialAlpha * opacity);
       }
     `,
     transparent: true,
