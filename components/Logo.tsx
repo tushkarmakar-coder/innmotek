@@ -35,6 +35,7 @@ export default function Logo({ className = "", layout = "horizontal", iconSize =
       {/* Logo Typography INNMOTEK */}
       <svg
         height={layout === "vertical" ? iconSize * 0.45 : iconSize * 0.55}
+        width={layout === "vertical" ? iconSize * 0.45 * 6.4 : iconSize * 0.55 * 6.4}
         viewBox="0 0 128 20"
         fill="none"
         stroke="currentColor"
@@ -43,7 +44,7 @@ export default function Logo({ className = "", layout = "horizontal", iconSize =
         strokeLinejoin="round"
         className="shrink-0 overflow-visible"
       >
-        <path d="M 1.5 0 L 1.5 20 M 9.5 20 L 9.5 0 L 21.5 20 L 21.5 0 M 27.5 20 L 27.5 0 L 39.5 20 L 39.5 0 M 45.5 20 L 45.5 0 L 51.5 18 L 57.5 0 L 57.5 20 M 66.5 0 H 72.5 A 3 3 0 0 1 75.5 3 V 17 A 3 3 0 0 1 72.5 20 H 66.5 A 3 3 0 0 1 63.5 17 V 3 A 3 3 0 0 1 66.5 0 Z M 81.5 1.5 H 96.5 M 89 1.5 V 20 M 109.5 0 H 98.5 V 20 H 109.5 M 98.5 10 H 106.5 M 115.5 0 V 20 M 126.5 0 L 115.5 10 L 126.5 20" />
+        <path d="M 1.5 0 L 1.5 20 M 9.5 20 L 9.5 0 L 21.5 20 L 21.5 0 M 27.5 20 L 27.5 0 L 39.5 20 L 39.5 0 M 45.5 20 L 45.5 0 L 51.5 18 L 57.5 0 L 57.5 20 M 66.5 0 H 72.5 A 3 3 0 0 1 75.5 3 V 17 A 3 3 0 0 1 72.5 20 H 66.5 A 3 3 0 0 1 63.5 17 V 3 A 3 3 0 0 1 66.5 0 Z M 81.5 0 H 96.5 M 89 0 V 20 M 109.5 0 H 98.5 V 20 H 109.5 M 98.5 10 H 106.5 M 115.5 0 V 20 M 126.5 0 L 115.5 10 L 126.5 20" />
       </svg>
     </div>
   );
