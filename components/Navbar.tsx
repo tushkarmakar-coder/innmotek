@@ -12,6 +12,7 @@ const NAV_LINKS = [
   { href: "/about", label: "About" },
   { href: "/why-innmotek", label: "Why Us" },
   { href: "/process", label: "Our Process" },
+  { href: "/projects", label: "Projects" },
   { href: "/faq", label: "FAQ" },
   { href: "/contact", label: "Contact" },
 ];

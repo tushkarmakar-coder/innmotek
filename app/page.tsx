@@ -353,6 +353,73 @@ export default function HomePage() {
       </section>
 
       {/* ──────────────────────────────────────────────────────── */}
+      {/* SECTION 3.5 — ABOUT COMPANY */}
+      {/* ──────────────────────────────────────────────────────── */}
+      <section className="py-24 bg-cream border-t border-gold-light/10">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* Left: Image Card */}
+            <RevealWrapper className="relative h-[480px] rounded-3xl overflow-hidden border border-gold-light/20 shadow-luxury group">
+              <Image
+                src="/images/about_company.png"
+                alt="Innmotek Installation Service"
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-charcoal/40 to-transparent" />
+            </RevealWrapper>
+
+            {/* Right: Copy */}
+            <RevealWrapper delay={0.2} className="flex flex-col gap-6">
+              <div>
+                <SectionEyebrow text="About Company" className="mb-3" />
+                <h2 className="text-3xl md:text-5xl font-serif-luxury text-charcoal">
+                  Premier Heating <span className="italic text-gold">Solution!</span>
+                </h2>
+              </div>
+              
+              <p className="text-warm-gray text-sm md:text-base font-light leading-relaxed">
+                Innmotek is a leading supplier of Hot Water Heat Pumps, Swimming Pool Heat Pumps, and Accessories in Residential, Commercial, and Industrial areas. We have a team of experienced professionals who can help you choose the right product for your needs.
+              </p>
+
+              <div className="flex flex-col gap-5 mt-2">
+                {/* Mission */}
+                <div className="flex gap-4">
+                  <span className="text-gold text-lg mt-0.5">🎯</span>
+                  <div>
+                    <h4 className="font-semibold text-charcoal text-sm">Our Mission</h4>
+                    <p className="text-warm-gray text-xs font-light leading-relaxed mt-1">
+                      To provide our customers with the best possible experience when it comes to Hot Water Heat Pumps and Swimming Pool Heat Pumps, ensuring you have the resources to make the best decisions.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Values */}
+                <div className="flex gap-4">
+                  <span className="text-gold text-lg mt-0.5">💎</span>
+                  <div>
+                    <h4 className="font-semibold text-charcoal text-sm">Our Values</h4>
+                    <p className="text-warm-gray text-xs font-light leading-relaxed mt-1">
+                      We believe our customers are our top priority. We are committed to high-quality products, competitive pricing, excellent customer service, and a satisfaction guarantee.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <Link
+                  href="/about"
+                  className="inline-flex bg-charcoal text-white hover:bg-gold hover:text-charcoal px-8 py-4 rounded-full text-xs uppercase tracking-[2px] font-semibold transition-all duration-300 transform hover:-translate-y-0.5 shadow-md shadow-luxury/5"
+                >
+                  Learn More
+                </Link>
+              </div>
+            </RevealWrapper>
+          </div>
+        </div>
+      </section>
+
+      {/* ──────────────────────────────────────────────────────── */}
       {/* SECTION 4 — WHY US (Magazine Split) */}
       {/* ──────────────────────────────────────────────────────── */}
       <section className="min-h-screen grid grid-cols-1 lg:grid-cols-2 items-stretch border-t border-gold-light/10">
