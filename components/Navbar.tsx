@@ -224,7 +224,7 @@ export default function Navbar() {
                 Get Free Quote
               </Link>
               <div className="text-center text-xs text-warm-gray mt-4">
-                Gorakhpur, UP, India • info@innmotek.in
+                Gorakhpur, UP, India • info@innmotek.com
               </div>
             </div>
           </motion.div>

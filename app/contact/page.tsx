@@ -152,7 +152,7 @@ function ContactContent() {
                       className={`w-full px-4 py-3 rounded border text-sm focus:outline-none focus:border-gold transition-colors ${
                         errors.phone ? "border-red-500" : "border-gold-light/20 bg-cream/10"
                       }`}
-                      placeholder="+91 XXXXX XXXXX"
+                      placeholder="+91 98765 43210"
                     />
                     {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
                   </div>
@@ -248,8 +248,8 @@ function ContactContent() {
                   <Phone className="w-5 h-5 text-gold shrink-0 mt-0.5" />
                   <div>
                     <span className="text-charcoal font-semibold block mb-1">Inquiry Lines</span>
-                    <span>+91-XXXXX-XXXXX (Sales)</span>
-                    <span className="block">+91-XXXXX-XXXXX (Technical Support)</span>
+                    <span>+91 808 174 1031 (Sales & Support)</span>
+                    <span className="block">+971 55 439 8350 (UAE Office)</span>
                   </div>
                 </div>
 
@@ -257,7 +257,7 @@ function ContactContent() {
                   <Mail className="w-5 h-5 text-gold shrink-0 mt-0.5" />
                   <div>
                     <span className="text-charcoal font-semibold block mb-1">E-mail Correspondence</span>
-                    <span>info@innmotek.in</span>
+                    <span>info@innmotek.com</span>
                   </div>
                 </div>
 

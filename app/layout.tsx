@@ -43,14 +43,14 @@ export const metadata: Metadata = {
     "Gorakhpur heating",
     "BBQ grills India"
   ],
-  metadataBase: new URL("https://innmotek.in"),
+  metadataBase: new URL("https://innmotek.com"),
   alternates: {
     canonical: "/"
   },
   openGraph: {
     title: "Innmotek | Premium Heat Pumps & Heating Solutions India",
     description: "India's leading manufacturer of energy-efficient air source heat pumps, pool heat pumps, wood fireplaces & BBQ grills.",
-    url: "https://innmotek.in",
+    url: "https://innmotek.com",
     siteName: "Innmotek India",
     locale: "en_IN",
     type: "website",

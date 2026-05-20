@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Global WhatsApp number configuration (Note: Replace XXXXX-XXXXX with actual number in production)
-export const WHATSAPP_NUMBER = "+91-XXXXX-XXXXX";
-const WHATSAPP_LINK = "https://wa.me/919999999999"; // standard format link
+// Global WhatsApp number configuration
+export const WHATSAPP_NUMBER = "+91 808 174 1031";
+const WHATSAPP_LINK = "https://wa.me/918081741031"; // standard format link
 
 export default function WhatsAppFloat() {
   const [isVisible, setIsVisible] = useState(true);
